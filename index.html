@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 Day Workout Tracker</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1, h2 { color: #fff; }
+        .card {
+            background: #1c1c1e;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+        }
+        .btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .btn-small {
+            background: #333;
+            color: #aaa;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .btn:disabled { background: #555; }
+        
+        .adjust-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #2c2c2e;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .adjust-input {
+            width: 50px;
+            background: #000;
+            border: 1px solid #444;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+        label { font-size: 14px; color: #aaa; }
+
+        .checkbox-group {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+            padding: 15px;
+            background: #2c2c2e;
+            border-radius: 8px;
+            align-items: center;
+            transition: opacity 0.3s;
+            position: relative;
+        }
+        input[type="checkbox"] {
+            transform: scale(1.5);
+            accent-color: #34C759;
+        }
+        .hidden { display: none; }
+        
+        .congrats {
+            color: #34C759;
+            font-weight: bold;
+            font-size: 14px;
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #1c1c1e;
+            padding: 2px 8px;
+            border-radius: 5px;
+            animation: fadeIn 0.3s, fadeOut 0.5s 1.5s forwards;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #333;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .progress-fill {
+            height: 10px;
+            background-color: #34C759;
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; visibility: hidden; }
+        }
+        .label-text { font-size: 14px; color: #aaa; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <div id="landing-page">
+        <h1>Gym Tracker</h1>
+        <div class="card">
+            <h2 id="day-display">Day 1</h2>
+            <p id="date-display"></p>
+            <p id="workout-type" style="color: #34C759; font-weight: bold;"></p>
+            <button class="btn" onclick="startWorkout()">Start Workout</button>
+        </div>
+    </div>
+
+    <div id="workout-page" class="hidden">
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <h2 id="exercise-name">Exercise Name</h2>
+        
+        <div class="adjust-panel">
+            <label>Sets: <input type="number" id="input-sets" class="adjust-input" onchange="regenerateSets()"></label>
+            <label>Reps: <input type="text" id="input-reps" class="adjust-input" style="width: 80px;"></label>
+            <button class="btn-small" onclick="resetDefaults()">Reset</button>
+        </div>
+
+        <div id="sets-container">
+            </div>
+
+        <button class="btn" id="next-exercise-btn" onclick="nextExercise()" style="display:none;">Next Exercise</button>
+    </div>
+
+    <div id="finish-page" class="hidden">
+        <h1>🎉 Congratulations!</h1>
+        <div class="card">
+            <p>Workout Completed for Today!</p>
+            <p>See you tomorrow.</p>
+            <button class="btn" onclick="location.reload()">Home</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Start Date: Jan 17, 2026
+    const startDate = new Date('2026-01-17'); 
+    
+    // Workout Data
+    const workouts = {
+        push: [
+            { name: "Push-ups", sets: 4, reps: "15-20", bilateral: true },
+            { name: "Dumbbell Floor Press", sets: 4, reps: "10", bilateral: true },
+            { name: "Dumbbell Overhead Press", sets: 3, reps: "10-12", bilateral: true },
+            { name: "Dumbbell Lateral Raises", sets: 3, reps: "12-15", bilateral: true },
+            { name: "Dumbbell Triceps Kickback", sets: 3, reps: "12", bilateral: false },
+            { name: "Bench/Chair Dips", sets: 3, reps: "12-15", bilateral: true }
+        ],
+        pull: [
+            { name: "Dumbbell One-Arm Row", sets: 4, reps: "12", bilateral: false },
+            { name: "Dumbbell Dead Row", sets: 4, reps: "10-12", bilateral: true },
+            { name: "Dumbbell Bicep Curl", sets: 4, reps: "10-12", bilateral: false },
+            { name: "Hammer Curl", sets: 3, reps: "12", bilateral: false },
+            { name: "Dumbbell Upright Row", sets: 3, reps: "12", bilateral: true }
+        ],
+        legs: [
+            { name: "Bodyweight Squats", sets: 4, reps: "25", bilateral: true },
+            { name: "Dumbbell Goblet Squats", sets: 4, reps: "15", bilateral: true },
+            { name: "Walking Lunges", sets: 3, reps: "20 steps", bilateral: true },
+            { name: "Standing Calf Raises", sets: 4, reps: "20", bilateral: true },
+            { name: "Plank", sets: 3, reps: "40-60s", bilateral: true }
+        ],
+        rest: []
+    };
+
+    let currentDayNum = 1;
+    let todaysPlan = [];
+    let currentExerciseIndex = 0;
+
+    function init() {
+        const today = new Date();
+        const diffTime = Math.abs(today - startDate);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+        currentDayNum = diffDays + 1;
+
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('date-display').innerText = today.toLocaleDateString('en-US', options);
+        document.getElementById('day-display').innerText = `Day ${currentDayNum} of 30`;
+
+        const cycleDay = currentDayNum % 7;
+        let typeText = "";
+
+        if (cycleDay === 1 || cycleDay === 4) {
+            todaysPlan = workouts.push;
+            typeText = "PUSH DAY";
+        } else if (cycleDay === 2 || cycleDay === 5) {
+            todaysPlan = workouts.pull;
+            typeText = "PULL DAY";
+        } else if (cycleDay === 3 || cycleDay === 6) {
+            todaysPlan = workouts.legs;
+            typeText = "LEGS + CORE";
+        } else {
+            todaysPlan = workouts.rest;
+            typeText = "REST DAY 😴";
+        }
+
+        document.getElementById('workout-type').innerText = typeText;
+    }
+
+    function getProgressiveReps(baseReps) {
+        // Increase reps by 1 every 2 days
+        // Formula: Floor((Day - 1) / 2)
+        const addedReps = Math.floor((currentDayNum - 1) / 2);
+        
+        // Regex to find all numbers in the string and add 'addedReps' to them
+        return baseReps.replace(/\d+/g, (match) => {
+            return parseInt(match) + addedReps;
+        });
+    }
+
+    function startWorkout() {
+        if (todaysPlan.length === 0) {
+            alert("It's Rest Day!");
+            return;
+        }
+        document.getElementById('landing-page').classList.add('hidden');
+        document.getElementById('workout-page').classList.remove('hidden');
+        loadExercise(0);
+    }
+
+    function loadExercise(index) {
+        currentExerciseIndex = index;
+        const exercise = todaysPlan[index];
+        
+        document.getElementById('exercise-name').innerText = `#${index + 1} ${exercise.name}`;
+        
+        // Calculate dynamic reps based on day
+        const dynamicReps = getProgressiveReps(exercise.reps);
+
+        // Load into inputs
+        document.getElementById('input-sets').value = exercise.sets;
+        document.getElementById('input-reps').value = dynamicReps;
+
+        const progress = (index / todaysPlan.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+        
+        renderSets(exercise.sets);
+    }
+
+    function resetDefaults() {
+        if (confirm("Are you sure you want to reset settings for this exercise?")) {
+            const exercise = todaysPlan[currentExerciseIndex];
+            // Reset to calculated progressive reps, not just base
+            const dynamicReps = getProgressiveReps(exercise.reps);
+            
+            document.getElementById('input-sets').value = exercise.sets;
+            document.getElementById('input-reps').value = dynamicReps;
+            renderSets(exercise.sets);
+        }
+    }
+
+    function regenerateSets() {
+        const newSetCount = parseInt(document.getElementById('input-sets').value);
+        if(newSetCount > 0) {
+            renderSets(newSetCount);
+        }
+    }
+
+    function renderSets(setCount) {
+        const exercise = todaysPlan[currentExerciseIndex];
+        const setsContainer = document.getElementById('sets-container');
+        setsContainer.innerHTML = '';
+        document.getElementById('next-exercise-btn').style.display = 'none';
+
+        for (let i = 1; i <= setCount; i++) {
+            const setDiv = document.createElement('div');
+            setDiv.className = 'checkbox-group';
+            setDiv.id = `set-row-${i}`;
+            
+            if (i > 1) setDiv.style.opacity = '0.3';
+            if (i > 1) setDiv.style.pointerEvents = 'none';
+
+            let html = `<span style="width: 50px; font-weight:bold;">Set ${i}</span>`;
+
+            if (exercise.bilateral) {
+                html += `
+                    <div style="text-align: center;">
+                        <input type="checkbox" onchange="checkSet(${i}, ${setCount})">
+                        <div class="label-text">Done</div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div style="text-align: center;">
+                        <input type="checkbox" id="set-${i}-L" onchange="checkUnilateral(${i}, ${setCount})">
+                        <div class="label-text">Left</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <input type="checkbox" id="set-${i}-R" onchange="checkUnilateral(${i}, ${setCount})">
+                        <div class="label-text">Right</div>
+                    </div>
+                `;
+            }
+            
+            html += `<div id="msg-${i}" class="congrats" style="display:none;">Good Job!</div>`;
+            setDiv.innerHTML = html;
+            setsContainer.appendChild(setDiv);
+        }
+    }
+
+    function checkSet(setNum, totalSets) {
+        const currentTotal = parseInt(document.getElementById('input-sets').value);
+        showCongratsAndUnlockNext(setNum, currentTotal);
+    }
+
+    function checkUnilateral(setNum, totalSets) {
+        const left = document.getElementById(`set-${setNum}-L`).checked;
+        const right = document.getElementById(`set-${setNum}-R`).checked;
+        const currentTotal = parseInt(document.getElementById('input-sets').value);
+
+        if (left && right) {
+            showCongratsAndUnlockNext(setNum, currentTotal);
+        }
+    }
+
+    function showCongratsAndUnlockNext(setNum, totalSets) {
+        const msg = document.getElementById(`msg-${setNum}`);
+        msg.style.display = 'block';
+        msg.innerText = "Congratulations! 🎉";
+
+        const currentRow = document.getElementById(`set-row-${setNum}`);
+        currentRow.style.borderColor = "#34C759";
+
+        if (setNum < totalSets) {
+            const nextRow = document.getElementById(`set-row-${setNum + 1}`);
+            nextRow.style.opacity = '1';
+            nextRow.style.pointerEvents = 'auto';
+        } else {
+            document.getElementById('next-exercise-btn').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    }
+
+    function nextExercise() {
+        if (currentExerciseIndex + 1 < todaysPlan.length) {
+            loadExercise(currentExerciseIndex + 1);
+        } else {
+            document.getElementById('workout-page').classList.add('hidden');
+            document.getElementById('finish-page').classList.remove('hidden');
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
