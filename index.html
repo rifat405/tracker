@@ -1,377 +1,949 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30 Day Workout Tracker</title>
+    <title>30 Days Greek Warrior</title>
     <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Segoe UI', sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            text-align: center;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1, h2 { color: #fff; }
-        .card {
-            background: #1c1c1e;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
-        }
-        .btn {
-            background: #007AFF;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
-        }
-        .btn-small {
-            background: #333;
-            color: #aaa;
-            border: 1px solid #555;
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .btn:disabled { background: #555; }
-        
-        .adjust-panel {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: #2c2c2e;
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .adjust-input {
-            width: 50px;
-            background: #000;
-            border: 1px solid #444;
-            color: white;
-            padding: 5px;
-            border-radius: 5px;
-            text-align: center;
-            font-size: 16px;
-        }
-        label { font-size: 14px; color: #aaa; }
 
-        .checkbox-group {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
             display: flex;
-            justify-content: space-around;
-            margin: 10px 0;
-            padding: 15px;
-            background: #2c2c2e;
-            border-radius: 8px;
             align-items: center;
-            transition: opacity 0.3s;
-            position: relative;
+            justify-content: center;
+            padding: 20px;
         }
-        input[type="checkbox"] {
-            transform: scale(1.5);
-            accent-color: #34C759;
+
+        .container {
+            max-width: 500px;
+            width: 100%;
         }
-        .hidden { display: none; }
-        
-        .congrats {
-            color: #34C759;
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Screen */
+        .home-screen {
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .title {
+            font-size: 32px;
+            color: #e94560;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #00d9ff;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+
+        .day-info {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #e94560;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .day-number {
+            font-size: 18px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .day-title {
+            font-size: 28px;
+            color: #00d9ff;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .day-desc {
+            color: #ddd;
             font-size: 14px;
-            position: absolute;
-            top: -10px;
-            right: 10px;
-            background: #1c1c1e;
-            padding: 2px 8px;
-            border-radius: 5px;
-            animation: fadeIn 0.3s, fadeOut 0.5s 1.5s forwards;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 18px;
+            background: #e94560;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .start-btn:hover {
+            background: #d63851;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(233, 69, 96, 0.6);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid rgba(233, 69, 96, 0.3);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00d9ff;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        /* Exercise Screen */
+        .exercise-screen {
+            text-align: center;
+        }
+
+        .exercise-header {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #e94560;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .exercise-count {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .exercise-name {
+            font-size: 26px;
+            color: #00d9ff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .exercise-icon {
+            font-size: 80px;
+            margin: 30px 0;
+        }
+
+        .sets-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .set-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: all 0.3s;
+            flex-wrap: wrap;
+        }
+
+        .set-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .set-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .set-label {
+            font-size: 16px;
+            color: #ddd;
+            flex: 0 0 70px;
+            text-align: left;
+        }
+
+        .hand-checks {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .hand-check {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .hand-label {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+        }
+
+        .reps-input {
+            width: 70px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(233, 69, 96, 0.5);
+            border-radius: 8px;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+
+        .reps-input:focus {
+            outline: none;
+            border-color: #e94560;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .check-btn {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e94560;
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 20px;
+        }
+
+        .check-btn:hover {
+            background: rgba(233, 69, 96, 0.2);
+            transform: scale(1.1);
+        }
+
+        .check-btn.checked {
+            background: #00d9ff;
+            border-color: #00d9ff;
+        }
+
+        .check-btn.checked::after {
+            content: '✓';
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .rest-timer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 3px solid #e94560;
+            border-radius: 20px;
+            padding: 40px 60px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            animation: popIn 0.3s ease;
+        }
+
+        .rest-timer.active {
+            display: block;
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .rest-timer-title {
+            font-size: 24px;
+            color: #00d9ff;
+            margin-bottom: 20px;
+        }
+
+        .rest-timer-count {
+            font-size: 72px;
+            font-weight: bold;
+            color: #e94560;
+            margin-bottom: 20px;
+        }
+
+        .rest-timer-skip {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #e94560;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .rest-timer-skip:hover {
+            background: #e94560;
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 18px;
+            background: #e94560;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            background: #d63851;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+
+        .finish-btn {
+            background: #00d9ff;
+        }
+
+        .finish-btn:hover {
+            background: #00b8d4;
+        }
+
+        /* Rest Day Screen */
+        .rest-screen {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .rest-icon {
+            font-size: 100px;
+            margin-bottom: 30px;
+        }
+
+        .rest-title {
+            font-size: 36px;
+            color: #00d9ff;
+            margin-bottom: 20px;
+        }
+
+        .rest-desc {
+            color: #aaa;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        /* Congratulations Screen */
+        .congrats-screen {
+            text-align: center;
+        }
+
+        .congrats-icon {
+            font-size: 120px;
+            margin-bottom: 30px;
+            animation: celebrate 1s ease infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: rotate(-10deg) scale(1); }
+            50% { transform: rotate(10deg) scale(1.1); }
+        }
+
+        .congrats-title {
+            font-size: 38px;
+            color: #e94560;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .congrats-desc {
+            color: #00d9ff;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .home-btn {
+            width: 100%;
+            padding: 18px;
+            background: #00d9ff;
+            border: none;
+            border-radius: 12px;
+            color: #1a1a2e;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .home-btn:hover {
+            background: #00b8d4;
+            transform: translateY(-2px);
         }
 
         .progress-bar {
             width: 100%;
-            background-color: #333;
-            border-radius: 5px;
-            margin-bottom: 20px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
         }
+
         .progress-fill {
-            height: 10px;
-            background-color: #34C759;
-            width: 0%;
-            border-radius: 5px;
+            height: 100%;
+            background: linear-gradient(90deg, #e94560, #00d9ff);
+            border-radius: 10px;
             transition: width 0.3s;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; visibility: hidden; }
-        }
-        .label-text { font-size: 14px; color: #aaa; margin-top: 5px; }
     </style>
 </head>
 <body>
-
-<div class="container" id="app">
-    <div id="landing-page">
-        <h1>Gym Tracker</h1>
-        <div class="card">
-            <h2 id="day-display">Day 1</h2>
-            <p id="date-display"></p>
-            <p id="workout-type" style="color: #34C759; font-weight: bold;"></p>
-            <button class="btn" onclick="startWorkout()">Start Workout</button>
-        </div>
-    </div>
-
-    <div id="workout-page" class="hidden">
-        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-        <h2 id="exercise-name">Exercise Name</h2>
-        
-        <div class="adjust-panel">
-            <label>Sets: <input type="number" id="input-sets" class="adjust-input" onchange="regenerateSets()"></label>
-            <label>Reps: <input type="text" id="input-reps" class="adjust-input" style="width: 80px;"></label>
-            <button class="btn-small" onclick="resetDefaults()">Reset</button>
+    <div class="container">
+        <!-- Rest Timer Overlay -->
+        <div class="rest-timer" id="restTimer">
+            <div class="rest-timer-title">Rest Time</div>
+            <div class="rest-timer-count" id="restTimerCount">60</div>
+            <button class="rest-timer-skip" onclick="skipRest()">Skip Rest</button>
         </div>
 
-        <div id="sets-container">
+        <!-- Home Screen -->
+        <div class="screen active" id="homeScreen">
+            <div class="logo">⚔️</div>
+            <div class="title">Greek Warrior</div>
+            <div class="subtitle">30 Days Transformation</div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="completedDays">0</div>
+                    <div class="stat-label">Days Done</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="remainingDays">30</div>
+                    <div class="stat-label">Days Left</div>
+                </div>
             </div>
 
-        <button class="btn" id="next-exercise-btn" onclick="nextExercise()" style="display:none;">Next Exercise</button>
-    </div>
+            <div class="day-info">
+                <div class="day-number">Day <span id="todayDay">1</span></div>
+                <div class="day-title" id="todayWorkout">Upper Body Push</div>
+                <div class="day-desc" id="todayDesc">Push-ups, Shoulder Press, Chest Fly, Tricep Dips</div>
+            </div>
 
-    <div id="finish-page" class="hidden">
-        <h1>🎉 Congratulations!</h1>
-        <div class="card">
-            <p>Workout Completed for Today!</p>
-            <p>See you tomorrow.</p>
-            <button class="btn" onclick="location.reload()">Home</button>
+            <button class="start-btn" onclick="startWorkout()">START WORKOUT</button>
+        </div>
+
+        <!-- Exercise Screen -->
+        <div class="screen" id="exerciseScreen">
+            <div class="exercise-header">
+                <div class="exercise-count" id="exerciseCount">Exercise 1 of 4</div>
+                <div class="exercise-name" id="exerciseName">Push-ups</div>
+            </div>
+
+            <div class="exercise-icon">💪</div>
+
+            <div class="sets-container" id="setsContainer"></div>
+
+            <button class="next-btn" id="nextBtn" onclick="nextExercise()">NEXT EXERCISE ➡️</button>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="exerciseProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Rest Day Screen -->
+        <div class="screen" id="restScreen">
+            <div class="rest-icon">🛌</div>
+            <div class="rest-title">Rest Day</div>
+            <div class="rest-desc">
+                Recovery is essential! Take this time to:<br><br>
+                • Stretch your muscles<br>
+                • Stay hydrated<br>
+                • Get enough sleep<br>
+                • Prepare for tomorrow
+            </div>
+            <button class="start-btn" onclick="completeRestDay()">MARK AS COMPLETE</button>
+        </div>
+
+        <!-- Congratulations Screen -->
+        <div class="screen" id="congratsScreen">
+            <div class="congrats-icon">🏆</div>
+            <div class="congrats-title">CONGRATULATIONS!</div>
+            <div class="congrats-desc">Workout Complete! You're one step closer to becoming a Greek Warrior!</div>
+            <button class="home-btn" onclick="goHome()">BACK TO HOME</button>
         </div>
     </div>
-</div>
 
-<script>
-    // Start Date: Jan 17, 2026
-    const startDate = new Date('2026-01-17'); 
-    
-    // Workout Data
-    const workouts = {
-        push: [
-            { name: "Push-ups", sets: 4, reps: "15-20", bilateral: true },
-            { name: "Dumbbell Floor Press", sets: 4, reps: "10", bilateral: true },
-            { name: "Dumbbell Overhead Press", sets: 3, reps: "10-12", bilateral: true },
-            { name: "Dumbbell Lateral Raises", sets: 3, reps: "12-15", bilateral: true },
-            { name: "Dumbbell Triceps Kickback", sets: 3, reps: "12", bilateral: false },
-            { name: "Bench/Chair Dips", sets: 3, reps: "12-15", bilateral: true }
-        ],
-        pull: [
-            { name: "Dumbbell One-Arm Row", sets: 4, reps: "12", bilateral: false },
-            { name: "Dumbbell Dead Row", sets: 4, reps: "10-12", bilateral: true },
-            { name: "Dumbbell Bicep Curl", sets: 4, reps: "10-12", bilateral: false },
-            { name: "Hammer Curl", sets: 3, reps: "12", bilateral: false },
-            { name: "Dumbbell Upright Row", sets: 3, reps: "12", bilateral: true }
-        ],
-        legs: [
-            { name: "Bodyweight Squats", sets: 4, reps: "25", bilateral: true },
-            { name: "Dumbbell Goblet Squats", sets: 4, reps: "15", bilateral: true },
-            { name: "Walking Lunges", sets: 3, reps: "20 steps", bilateral: true },
-            { name: "Standing Calf Raises", sets: 4, reps: "20", bilateral: true },
-            { name: "Plank", sets: 3, reps: "40-60s", bilateral: true }
-        ],
-        rest: []
-    };
+    <script>
+        const workoutPlan = {
+            1: { name: "Upper Body Push", exercises: [
+                { name: "Push-ups", sets: 3, reps: 15, icon: "💪", needsHands: false },
+                { name: "Dumbbell Shoulder Press", sets: 3, reps: 12, icon: "🏋️", needsHands: true },
+                { name: "Dumbbell Chest Fly", sets: 3, reps: 12, icon: "🦅", needsHands: true },
+                { name: "Tricep Dips", sets: 3, reps: 12, icon: "💪", needsHands: false }
+            ]},
+            2: { name: "Legs & Core", exercises: [
+                { name: "Dumbbell Squats", sets: 4, reps: 15, icon: "🦵", needsHands: false },
+                { name: "Lunges", sets: 3, reps: 12, icon: "🚶", needsHands: true },
+                { name: "Calf Raises", sets: 3, reps: 20, icon: "👟", needsHands: true },
+                { name: "Plank Hold", sets: 3, reps: 45, icon: "🧘", needsHands: false }
+            ]},
+            3: { name: "Back & Biceps", exercises: [
+                { name: "Dumbbell Rows", sets: 4, reps: 12, icon: "🚣", needsHands: true },
+                { name: "Bicep Curls", sets: 3, reps: 15, icon: "💪", needsHands: true },
+                { name: "Hammer Curls", sets: 3, reps: 12, icon: "🔨", needsHands: true },
+                { name: "Superman Holds", sets: 3, reps: 30, icon: "🦸", needsHands: false }
+            ]},
+            4: { name: "Rest Day", rest: true },
+            5: { name: "Full Body Circuit", exercises: [
+                { name: "Burpees", sets: 3, reps: 10, icon: "🔥", needsHands: false },
+                { name: "Dumbbell Thrusters", sets: 3, reps: 12, icon: "⚡", needsHands: false },
+                { name: "Mountain Climbers", sets: 3, reps: 20, icon: "⛰️", needsHands: false },
+                { name: "Russian Twists", sets: 3, reps: 30, icon: "🌀", needsHands: false }
+            ]},
+            6: { name: "Shoulders & Arms", exercises: [
+                { name: "Lateral Raises", sets: 3, reps: 15, icon: "🦅", needsHands: true },
+                { name: "Front Raises", sets: 3, reps: 12, icon: "🏋️", needsHands: true },
+                { name: "Tricep Extension", sets: 3, reps: 12, icon: "💪", needsHands: false },
+                { name: "Concentration Curls", sets: 3, reps: 12, icon: "💪", needsHands: true }
+            ]},
+            7: { name: "Rest Day", rest: true },
+            8: { name: "Chest & Triceps", exercises: [
+                { name: "Wide Push-ups", sets: 4, reps: 15, icon: "💪", needsHands: false },
+                { name: "Floor Press", sets: 3, reps: 12, icon: "🏋️", needsHands: true },
+                { name: "Diamond Push-ups", sets: 3, reps: 10, icon: "💎", needsHands: false },
+                { name: "Tricep Kickbacks", sets: 3, reps: 15, icon: "🔙", needsHands: true }
+            ]},
+            9: { name: "Legs & Glutes", exercises: [
+                { name: "Goblet Squats", sets: 4, reps: 15, icon: "🏆", needsHands: false },
+                { name: "Romanian Deadlifts", sets: 3, reps: 12, icon: "🏋️", needsHands: false },
+                { name: "Split Squats", sets: 3, reps: 10, icon: "🦵", needsHands: true },
+                { name: "Step-ups", sets: 3, reps: 12, icon: "🪜", needsHands: true }
+            ]},
+            10: { name: "Back & Biceps", exercises: [
+                { name: "Single Arm Rows", sets: 3, reps: 12, icon: "🚣", needsHands: true },
+                { name: "Pullovers", sets: 3, reps: 12, icon: "🏋️", needsHands: false },
+                { name: "Bicep 21s", sets: 2, reps: 21, icon: "💪", needsHands: true },
+                { name: "Reverse Flys", sets: 3, reps: 15, icon: "🦅", needsHands: true }
+            ]},
+            11: { name: "Rest Day", rest: true },
+            12: { name: "HIIT Power", exercises: [
+                { name: "Dumbbell Swings", sets: 3, reps: 20, icon: "🔥", needsHands: false },
+                { name: "Jump Squats", sets: 3, reps: 15, icon: "⚡", needsHands: false },
+                { name: "Clean & Press", sets: 3, reps: 10, icon: "🏋️", needsHands: false },
+                { name: "High Knees", sets: 3, reps: 30, icon: "🏃", needsHands: false }
+            ]},
+            13: { name: "Core Destroyer", exercises: [
+                { name: "Side Bends", sets: 3, reps: 20, icon: "🌊", needsHands: true },
+                { name: "Bicycle Crunches", sets: 3, reps: 30, icon: "🚴", needsHands: false },
+                { name: "Woodchoppers", sets: 3, reps: 15, icon: "🪓", needsHands: true },
+                { name: "Leg Raises", sets: 3, reps: 15, icon: "🦵", needsHands: false }
+            ]},
+            14: { name: "Rest Day", rest: true },
+            15: { name: "Power Upper", exercises: [
+                { name: "Explosive Push-ups", sets: 4, reps: 12, icon: "💥", needsHands: false },
+                { name: "Arnold Press", sets: 3, reps: 10, icon: "🏋️", needsHands: true },
+                { name: "Renegade Rows", sets: 3, reps: 10, icon: "🚣", needsHands: true },
+                { name: "Close Push-ups", sets: 3, reps: 15, icon: "💪", needsHands: false }
+            ]},
+            16: { name: "Lower Power", exercises: [
+                { name: "Jump Squats", sets: 4, reps: 12, icon: "⚡", needsHands: false },
+                { name: "Single Leg Deadlifts", sets: 3, reps: 10, icon: "🦵", needsHands: true },
+                { name: "Sumo Squats", sets: 3, reps: 15, icon: "🏋️", needsHands: false },
+                { name: "Wall Sit", sets: 3, reps: 60, icon: "🧱", needsHands: false }
+            ]},
+            17: { name: "Athletic Build", exercises: [
+                { name: "Man Makers", sets: 3, reps: 8, icon: "🔥", needsHands: false },
+                { name: "Farmers Walk", sets: 3, reps: 60, icon: "🚶", needsHands: false },
+                { name: "Deadlifts", sets: 4, reps: 12, icon: "🏋️", needsHands: false },
+                { name: "Push-up to T", sets: 3, reps: 10, icon: "💪", needsHands: false }
+            ]},
+            18: { name: "Rest Day", rest: true },
+            19: { name: "Strength Focus", exercises: [
+                { name: "Slow Push-ups", sets: 3, reps: 10, icon: "🐌", needsHands: false },
+                { name: "Pause Squats", sets: 4, reps: 10, icon: "⏸️", needsHands: false },
+                { name: "Isometric Holds", sets: 3, reps: 30, icon: "🧘", needsHands: false },
+                { name: "Shrugs", sets: 3, reps: 20, icon: "🤷", needsHands: false }
+            ]},
+            20: { name: "Hypertrophy Push", exercises: [
+                { name: "Incline Press", sets: 3, reps: 15, icon: "🏋️", needsHands: true },
+                { name: "Chest Flys", sets: 3, reps: 12, icon: "🦅", needsHands: true },
+                { name: "Tricep Extension", sets: 3, reps: 15, icon: "💪", needsHands: false },
+                { name: "Pike Push-ups", sets: 3, reps: 12, icon: "🔺", needsHands: false }
+            ]},
+            21: { name: "Rest Day", rest: true },
+            22: { name: "Back Thickness", exercises: [
+                { name: "Wide Rows", sets: 4, reps: 12, icon: "🚣", needsHands: true },
+                { name: "Reverse Flys", sets: 3, reps: 15, icon: "🦅", needsHands: true },
+                { name: "Shrugs", sets: 3, reps: 20, icon: "🤷", needsHands: false },
+                { name: "Deadlifts", sets: 3, reps: 12, icon: "🏋️", needsHands: false }
+            ]},
+            23: { name: "Leg Definition", exercises: [
+                { name: "Sissy Squats", sets: 3, reps: 12, icon: "🦵", needsHands: false },
+                { name: "Walking Lunges", sets: 3, reps: 15, icon: "🚶", needsHands: true },
+                { name: "Single Calf Raises", sets: 3, reps: 20, icon: "👟", needsHands: true },
+                { name: "Hip Thrusts", sets: 3, reps: 15, icon: "🍑", needsHands: false }
+            ]},
+            24: { name: "Arm Pump", exercises: [
+                { name: "Slow Bicep Curls", sets: 4, reps: 15, icon: "💪", needsHands: true },
+                { name: "Skull Crushers", sets: 3, reps: 12, icon: "💀", needsHands: false },
+                { name: "Hammer Curls", sets: 3, reps: 15, icon: "🔨", needsHands: true },
+                { name: "Diamond Push-ups", sets: 3, reps: 12, icon: "💎", needsHands: false }
+            ]},
+            25: { name: "Rest Day", rest: true },
+            26: { name: "Total Body Burn", exercises: [
+                { name: "Thrusters", sets: 4, reps: 15, icon: "🚀", needsHands: false },
+                { name: "Burpees", sets: 3, reps: 10, icon: "🔥", needsHands: false },
+                { name: "Mountain Climbers", sets: 3, reps: 20, icon: "⛰️", needsHands: false },
+                { name: "Plank Rows", sets: 3, reps: 12, icon: "🚣", needsHands: true }
+            ]},
+            27: { name: "Warrior Shoulders", exercises: [
+                { name: "Military Press", sets: 4, reps: 12, icon: "⚔️", needsHands: true },
+                { name: "Upright Rows", sets: 3, reps: 12, icon: "🏋️", needsHands: false },
+                { name: "Lateral Raises", sets: 3, reps: 15, icon: "🦅", needsHands: true },
+                { name: "Face Pulls", sets: 3, reps: 15, icon: "😤", needsHands: false }
+            ]},
+            28: { name: "Rest Day", rest: true },
+            29: { name: "Spartan Challenge", exercises: [
+                { name: "Push-ups", sets: 1, reps: 50, icon: "💪", needsHands: false },
+                { name: "Squats", sets: 1, reps: 50, icon: "🦵", needsHands: false },
+                { name: "Burpees", sets: 1, reps: 25, icon: "🔥", needsHands: false },
+                { name: "Dumbbell Swings", sets: 1, reps: 75, icon: "⚔️", needsHands: false }
+            ]},
+            30: { name: "Victory Lap", exercises: [
+                { name: "Push Variations", sets: 4, reps: 20, icon: "💪", needsHands: false },
+                { name: "Squat Variations", sets: 4, reps: 20, icon: "🦵", needsHands: false },
+                { name: "Core Crusher", sets: 4, reps: 30, icon: "🔥", needsHands: false },
+                { name: "Victory Flex", sets: 1, reps: 1, icon: "🏆", needsHands: false }
+            ]}
+        };
 
-    let currentDayNum = 1;
-    let todaysPlan = [];
-    let currentExerciseIndex = 0;
+        let currentDay = 1;
+        let currentExercise = 0;
+        let progress = JSON.parse(localStorage.getItem('progress')) || {};
+        let restTimer = null;
+        let restTimeLeft = 60;
 
-    function init() {
-        const today = new Date();
-        const diffTime = Math.abs(today - startDate);
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
-        currentDayNum = diffDays + 1;
-
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('date-display').innerText = today.toLocaleDateString('en-US', options);
-        document.getElementById('day-display').innerText = `Day ${currentDayNum} of 30`;
-
-        const cycleDay = currentDayNum % 7;
-        let typeText = "";
-
-        if (cycleDay === 1 || cycleDay === 4) {
-            todaysPlan = workouts.push;
-            typeText = "PUSH DAY";
-        } else if (cycleDay === 2 || cycleDay === 5) {
-            todaysPlan = workouts.pull;
-            typeText = "PULL DAY";
-        } else if (cycleDay === 3 || cycleDay === 6) {
-            todaysPlan = workouts.legs;
-            typeText = "LEGS + CORE";
-        } else {
-            todaysPlan = workouts.rest;
-            typeText = "REST DAY 😴";
-        }
-
-        document.getElementById('workout-type').innerText = typeText;
-    }
-
-    function getProgressiveReps(baseReps) {
-        // Increase reps by 1 every 2 days
-        // Formula: Floor((Day - 1) / 2)
-        const addedReps = Math.floor((currentDayNum - 1) / 2);
-        
-        // Regex to find all numbers in the string and add 'addedReps' to them
-        return baseReps.replace(/\d+/g, (match) => {
-            return parseInt(match) + addedReps;
-        });
-    }
-
-    function startWorkout() {
-        if (todaysPlan.length === 0) {
-            alert("It's Rest Day!");
-            return;
-        }
-        document.getElementById('landing-page').classList.add('hidden');
-        document.getElementById('workout-page').classList.remove('hidden');
-        loadExercise(0);
-    }
-
-    function loadExercise(index) {
-        currentExerciseIndex = index;
-        const exercise = todaysPlan[index];
-        
-        document.getElementById('exercise-name').innerText = `#${index + 1} ${exercise.name}`;
-        
-        // Calculate dynamic reps based on day
-        const dynamicReps = getProgressiveReps(exercise.reps);
-
-        // Load into inputs
-        document.getElementById('input-sets').value = exercise.sets;
-        document.getElementById('input-reps').value = dynamicReps;
-
-        const progress = (index / todaysPlan.length) * 100;
-        document.getElementById('progress-fill').style.width = `${progress}%`;
-        
-        renderSets(exercise.sets);
-    }
-
-    function resetDefaults() {
-        if (confirm("Are you sure you want to reset settings for this exercise?")) {
-            const exercise = todaysPlan[currentExerciseIndex];
-            // Reset to calculated progressive reps, not just base
-            const dynamicReps = getProgressiveReps(exercise.reps);
-            
-            document.getElementById('input-sets').value = exercise.sets;
-            document.getElementById('input-reps').value = dynamicReps;
-            renderSets(exercise.sets);
-        }
-    }
-
-    function regenerateSets() {
-        const newSetCount = parseInt(document.getElementById('input-sets').value);
-        if(newSetCount > 0) {
-            renderSets(newSetCount);
-        }
-    }
-
-    function renderSets(setCount) {
-        const exercise = todaysPlan[currentExerciseIndex];
-        const setsContainer = document.getElementById('sets-container');
-        setsContainer.innerHTML = '';
-        document.getElementById('next-exercise-btn').style.display = 'none';
-
-        for (let i = 1; i <= setCount; i++) {
-            const setDiv = document.createElement('div');
-            setDiv.className = 'checkbox-group';
-            setDiv.id = `set-row-${i}`;
-            
-            if (i > 1) setDiv.style.opacity = '0.3';
-            if (i > 1) setDiv.style.pointerEvents = 'none';
-
-            let html = `<span style="width: 50px; font-weight:bold;">Set ${i}</span>`;
-
-            if (exercise.bilateral) {
-                html += `
-                    <div style="text-align: center;">
-                        <input type="checkbox" onchange="checkSet(${i}, ${setCount})">
-                        <div class="label-text">Done</div>
-                    </div>
-                `;
+        // Auto-advance day based on date
+        function checkDayProgression() {
+            const startDate = localStorage.getItem('startDate');
+            if (!startDate) {
+                localStorage.setItem('startDate', new Date().toDateString());
+                currentDay = 1;
             } else {
-                html += `
-                    <div style="text-align: center;">
-                        <input type="checkbox" id="set-${i}-L" onchange="checkUnilateral(${i}, ${setCount})">
-                        <div class="label-text">Left</div>
-                    </div>
-                    <div style="text-align: center;">
-                        <input type="checkbox" id="set-${i}-R" onchange="checkUnilateral(${i}, ${setCount})">
-                        <div class="label-text">Right</div>
-                    </div>
-                `;
+                const start = new Date(startDate);
+                const today = new Date();
+                const diffTime = Math.abs(today - start);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                currentDay = Math.min(diffDays, 30);
+            }
+            localStorage.setItem('currentDay', currentDay);
+        }
+
+        function initApp() {
+            checkDayProgression();
+            updateHomeScreen();
+        }
+
+        function updateHomeScreen() {
+            const workout = workoutPlan[currentDay];
+            document.getElementById('todayDay').textContent = currentDay;
+            document.getElementById('todayWorkout').textContent = workout.name;
+            
+            if (workout.rest) {
+                document.getElementById('todayDesc').textContent = 'Recovery day - Rest and recharge';
+            } else {
+                const exercises = workout.exercises.map(e => e.name).join(', ');
+                document.getElementById('todayDesc').textContent = exercises;
+            }
+
+            const completed = Object.keys(progress).filter(d => progress[d]?.completed).length;
+            document.getElementById('completedDays').textContent = completed;
+            document.getElementById('remainingDays').textContent = 30 - completed;
+        }
+
+        function startWorkout() {
+            const workout = workoutPlan[currentDay];
+            
+            if (workout.rest) {
+                showScreen('restScreen');
+            } else {
+                currentExercise = 0;
+                showExercise();
+                showScreen('exerciseScreen');
+            }
+        }
+
+        function showExercise() {
+            const workout = workoutPlan[currentDay];
+            const exercise = workout.exercises[currentExercise];
+            
+            document.getElementById('exerciseCount').textContent = 
+                `Exercise ${currentExercise + 1} of ${workout.exercises.length}`;
+            document.getElementById('exerciseName').textContent = exercise.name;
+            document.querySelector('.exercise-icon').textContent = exercise.icon;
+
+            // Create sets
+            const container = document.getElementById('setsContainer');
+            container.innerHTML = '';
+            
+            const exerciseProgress = progress[currentDay]?.exercises?.[currentExercise] || { sets: [] };
+            
+            for (let i = 0; i < exercise.sets; i++) {
+                const setData = exerciseProgress.sets[i] || { 
+                    reps: exercise.reps, 
+                    checked: false,
+                    leftHand: false,
+                    rightHand: false
+                };
+                
+                const row = document.createElement('div');
+                row.className = 'set-row';
+                
+                if (exercise.needsHands) {
+                    row.innerHTML = `
+                        <span class="set-label">Set ${i + 1}</span>
+                        <input type="number" class="reps-input" value="${setData.reps}" 
+                               onchange="updateReps(${i}, this.value)">
+                        <div class="hand-checks">
+                            <div class="hand-check">
+                                <span class="hand-label">Left</span>
+                                <button class="check-btn ${setData.leftHand ? 'checked' : ''}" 
+                                        onclick="toggleHand(${i}, 'left')"></button>
+                            </div>
+                            <div class="hand-check">
+                                <span class="hand-label">Right</span>
+                                <button class="check-btn ${setData.rightHand ? 'checked' : ''}" 
+                                        onclick="toggleHand(${i}, 'right')"></button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    row.innerHTML = `
+                        <span class="set-label">Set ${i + 1}</span>
+                        <input type="number" class="reps-input" value="${setData.reps}" 
+                               onchange="updateReps(${i}, this.value)">
+                        <button class="check-btn ${setData.checked ? 'checked' : ''}" 
+                                onclick="toggleSet(${i})"></button>
+                    `;
+                }
+                
+                container.appendChild(row);
+            }
+
+            // Update button
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentExercise === workout.exercises.length - 1) {
+                nextBtn.textContent = 'FINISH WORKOUT 🏆';
+                nextBtn.className = 'next-btn finish-btn';
+            } else {
+                nextBtn.textContent = 'NEXT EXERCISE ➡️';
+                nextBtn.className = 'next-btn';
+            }
+
+            updateExerciseProgress();
+        }
+
+        function updateReps(setIdx, reps) {
+            if (!progress[currentDay]) progress[currentDay] = { exercises: [] };
+            if (!progress[currentDay].exercises[currentExercise]) {
+                progress[currentDay].exercises[currentExercise] = { sets: [] };
+            }
+            if (!progress[currentDay].exercises[currentExercise].sets[setIdx]) {
+                progress[currentDay].exercises[currentExercise].sets[setIdx] = {};
             }
             
-            html += `<div id="msg-${i}" class="congrats" style="display:none;">Good Job!</div>`;
-            setDiv.innerHTML = html;
-            setsContainer.appendChild(setDiv);
+            progress[currentDay].exercises[currentExercise].sets[setIdx].reps = parseInt(reps);
+            localStorage.setItem('progress', JSON.stringify(progress));
         }
-    }
 
-    function checkSet(setNum, totalSets) {
-        const currentTotal = parseInt(document.getElementById('input-sets').value);
-        showCongratsAndUnlockNext(setNum, currentTotal);
-    }
-
-    function checkUnilateral(setNum, totalSets) {
-        const left = document.getElementById(`set-${setNum}-L`).checked;
-        const right = document.getElementById(`set-${setNum}-R`).checked;
-        const currentTotal = parseInt(document.getElementById('input-sets').value);
-
-        if (left && right) {
-            showCongratsAndUnlockNext(setNum, currentTotal);
+        function toggleSet(setIdx) {
+            const workout = workoutPlan[currentDay];
+            const exercise = workout.exercises[currentExercise];
+            
+            if (!progress[currentDay]) progress[currentDay] = { exercises: [] };
+            if (!progress[currentDay].exercises[currentExercise]) {
+                progress[currentDay].exercises[currentExercise] = { sets: [] };
+            }
+            if (!progress[currentDay].exercises[currentExercise].sets[setIdx]) {
+                progress[currentDay].exercises[currentExercise].sets[setIdx] = { 
+                    reps: exercise.reps, 
+                    checked: false 
+                };
+            }
+            
+            progress[currentDay].exercises[currentExercise].sets[setIdx].checked = 
+                !progress[currentDay].exercises[currentExercise].sets[setIdx].checked;
+            
+            localStorage.setItem('progress', JSON.stringify(progress));
+            
+            // Start rest timer after checking
+            if (progress[currentDay].exercises[currentExercise].sets[setIdx].checked) {
+                startRestTimer();
+            }
+            
+            showExercise();
         }
-    }
 
-    function showCongratsAndUnlockNext(setNum, totalSets) {
-        const msg = document.getElementById(`msg-${setNum}`);
-        msg.style.display = 'block';
-        msg.innerText = "Congratulations! 🎉";
-
-        const currentRow = document.getElementById(`set-row-${setNum}`);
-        currentRow.style.borderColor = "#34C759";
-
-        if (setNum < totalSets) {
-            const nextRow = document.getElementById(`set-row-${setNum + 1}`);
-            nextRow.style.opacity = '1';
-            nextRow.style.pointerEvents = 'auto';
-        } else {
-            document.getElementById('next-exercise-btn').style.display = 'block';
-            window.scrollTo(0, document.body.scrollHeight);
+        function toggleHand(setIdx, hand) {
+            const workout = workoutPlan[currentDay];
+            const exercise = workout.exercises[currentExercise];
+            
+            if (!progress[currentDay]) progress[currentDay] = { exercises: [] };
+            if (!progress[currentDay].exercises[currentExercise]) {
+                progress[currentDay].exercises[currentExercise] = { sets: [] };
+            }
+            if (!progress[currentDay].exercises[currentExercise].sets[setIdx]) {
+                progress[currentDay].exercises[currentExercise].sets[setIdx] = { 
+                    reps: exercise.reps,
+                    leftHand: false,
+                    rightHand: false
+                };
+            }
+            
+            if (hand === 'left') {
+                progress[currentDay].exercises[currentExercise].sets[setIdx].leftHand = 
+                    !progress[currentDay].exercises[currentExercise].sets[setIdx].leftHand;
+            } else {
+                progress[currentDay].exercises[currentExercise].sets[setIdx].rightHand = 
+                    !progress[currentDay].exercises[currentExercise].sets[setIdx].rightHand;
+            }
+            
+            // Check if both hands are done
+            const setData = progress[currentDay].exercises[currentExercise].sets[setIdx];
+            if (setData.leftHand && setData.rightHand) {
+                setData.checked = true;
+                startRestTimer();
+            }
+            
+            localStorage.setItem('progress', JSON.stringify(progress));
+            showExercise();
         }
-    }
 
-    function nextExercise() {
-        if (currentExerciseIndex + 1 < todaysPlan.length) {
-            loadExercise(currentExerciseIndex + 1);
-        } else {
-            document.getElementById('workout-page').classList.add('hidden');
-            document.getElementById('finish-page').classList.remove('hidden');
+        function startRestTimer() {
+            restTimeLeft = 60;
+            document.getElementById('restTimerCount').textContent = restTimeLeft;
+            document.getElementById('restTimer').classList.add('active');
+            
+            restTimer = setInterval(() => {
+                restTimeLeft--;
+                document.getElementById('restTimerCount').textContent = restTimeLeft;
+                
+                if (restTimeLeft <= 0) {
+                    skipRest();
+                }
+            }, 1000);
         }
-    }
 
-    init();
-</script>
+        function skipRest() {
+            clearInterval(restTimer);
+            document.getElementById('restTimer').classList.remove('active');
+        }
+
+        function updateExerciseProgress() {
+            const workout = workoutPlan[currentDay];
+            const totalSets = workout.exercises.reduce((sum, ex) => sum + ex.sets, 0);
+            const completedSets = progress[currentDay]?.exercises?.reduce((sum, ex) => 
+                sum + (ex.sets?.filter(s => s.checked || (s.leftHand && s.rightHand)).length || 0), 0) || 0;
+            
+            const percent = Math.round((completedSets / totalSets) * 100);
+            document.getElementById('exerciseProgress').style.width = percent + '%';
+        }
+
+        function nextExercise() {
+            const workout = workoutPlan[currentDay];
+            
+            if (currentExercise < workout.exercises.length - 1) {
+                currentExercise++;
+                showExercise();
+            } else {
+                completeWorkout();
+            }
+        }
+
+        function completeWorkout() {
+            if (!progress[currentDay]) progress[currentDay] = {};
+            progress[currentDay].completed = true;
+            localStorage.setItem('progress', JSON.stringify(progress));
+            
+            showScreen('congratsScreen');
+        }
+
+        function completeRestDay() {
+            if (!progress[currentDay]) progress[currentDay] = {};
+            progress[currentDay].completed = true;
+            localStorage.setItem('progress', JSON.stringify(progress));
+            
+            goHome();
+        }
+
+        function goHome() {
+            checkDayProgression();
+            updateHomeScreen();
+            showScreen('homeScreen');
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        initApp();
+    </script>
 </body>
 </html>
