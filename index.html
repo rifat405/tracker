@@ -9,6 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -113,6 +114,12 @@
             letter-spacing: 2px;
             transition: all 0.3s;
             box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .start-btn:active {
+            transform: scale(0.98);
         }
 
         .start-btn:hover {
@@ -173,6 +180,19 @@
             color: #00d9ff;
             font-weight: bold;
             margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: underline;
+            text-decoration-color: rgba(0, 217, 255, 0.3);
+        }
+
+        .exercise-name:hover {
+            color: #ff0000;
+            text-decoration-color: #ff0000;
+        }
+
+        .exercise-name::before {
+            content: '▶️ ';
         }
 
         .exercise-icon {
@@ -264,6 +284,16 @@
             justify-content: center;
             transition: all 0.3s;
             font-size: 20px;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .check-btn:active {
+            transform: scale(0.95);
+            background: rgba(233, 69, 96, 0.3);
         }
 
         .check-btn:hover {
@@ -280,33 +310,6 @@
             content: '✓';
             color: #fff;
             font-weight: bold;
-        }
-
-        .tutorial-btn {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 0, 0, 0.2);
-            border: 2px solid #ff0000;
-            border-radius: 8px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .tutorial-btn:hover {
-            background: rgba(255, 0, 0, 0.3);
-            border-color: #ff3333;
-        }
-
-        .tutorial-btn::before {
-            content: '▶️';
-            font-size: 16px;
         }
 
         .rest-timer {
@@ -374,6 +377,12 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .next-btn:active {
+            transform: scale(0.98);
         }
 
         .next-btn:hover {
@@ -519,14 +528,10 @@
         <div class="screen" id="exerciseScreen">
             <div class="exercise-header">
                 <div class="exercise-count" id="exerciseCount">Exercise 1 of 4</div>
-                <div class="exercise-name" id="exerciseName">Push-ups</div>
+                <div class="exercise-name" id="exerciseName" onclick="openTutorial()">Push-ups</div>
             </div>
 
             <div class="exercise-icon">💪</div>
-
-            <button class="tutorial-btn" id="tutorialBtn" onclick="openTutorial()">
-                Watch Tutorial on YouTube
-            </button>
 
             <div class="sets-container" id="setsContainer"></div>
 
@@ -824,18 +829,26 @@
                 container.appendChild(row);
             }
 
-            // Add event listeners to buttons
+            // Add event listeners to buttons for both click and touch
             container.querySelectorAll('.check-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
+                const setIdx = parseInt(btn.getAttribute('data-set'));
+                const hand = btn.getAttribute('data-hand');
+                
+                const handleClick = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    const setIdx = parseInt(this.getAttribute('data-set'));
-                    const hand = this.getAttribute('data-hand');
                     if (hand) {
                         toggleHand(setIdx, hand);
                     } else {
                         toggleSet(setIdx);
                     }
+                };
+                
+                // Add both click and touchstart for iOS compatibility
+                btn.addEventListener('click', handleClick);
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    handleClick(e);
                 });
             });
 
