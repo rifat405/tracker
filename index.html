@@ -710,13 +710,6 @@
         let restTimer = null;
         let restTimeLeft = 60;
 
-        // Vibration function
-        function vibrate(pattern = [100]) {
-            if ('vibrate' in navigator) {
-                navigator.vibrate(pattern);
-            }
-        }
-
         // Auto-advance day based on date
         function checkDayProgression() {
             const startDate = localStorage.getItem('startDate');
@@ -734,7 +727,6 @@
         }
 
         function openTutorial() {
-            vibrate([50, 50, 50]);
             const exercise = workoutPlan[currentDay].exercises[currentExercise];
             if (exercise.tutorial) {
                 window.open(exercise.tutorial, '_blank');
@@ -764,7 +756,6 @@
         }
 
         function startWorkout() {
-            vibrate([150]);
             const workout = workoutPlan[currentDay];
             
             if (workout.rest) {
@@ -810,13 +801,13 @@
                         <div class="hand-checks">
                             <div class="hand-check">
                                 <span class="hand-label">Left</span>
-                                <button class="check-btn ${setData.leftHand ? 'checked' : ''}" 
-                                        onclick="toggleHand(${i}, 'left')"></button>
+                                <button type="button" class="check-btn ${setData.leftHand ? 'checked' : ''}" 
+                                        data-set="${i}" data-hand="left"></button>
                             </div>
                             <div class="hand-check">
                                 <span class="hand-label">Right</span>
-                                <button class="check-btn ${setData.rightHand ? 'checked' : ''}" 
-                                        onclick="toggleHand(${i}, 'right')"></button>
+                                <button type="button" class="check-btn ${setData.rightHand ? 'checked' : ''}" 
+                                        data-set="${i}" data-hand="right"></button>
                             </div>
                         </div>
                     `;
@@ -825,13 +816,28 @@
                         <span class="set-label">Set ${i + 1}</span>
                         <input type="number" class="reps-input" value="${setData.reps}" 
                                onchange="updateReps(${i}, this.value)">
-                        <button class="check-btn ${setData.checked ? 'checked' : ''}" 
-                                onclick="toggleSet(${i})"></button>
+                        <button type="button" class="check-btn ${setData.checked ? 'checked' : ''}" 
+                                data-set="${i}"></button>
                     `;
                 }
                 
                 container.appendChild(row);
             }
+
+            // Add event listeners to buttons
+            container.querySelectorAll('.check-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const setIdx = parseInt(this.getAttribute('data-set'));
+                    const hand = this.getAttribute('data-hand');
+                    if (hand) {
+                        toggleHand(setIdx, hand);
+                    } else {
+                        toggleSet(setIdx);
+                    }
+                });
+            });
 
             // Update button
             const nextBtn = document.getElementById('nextBtn');
@@ -870,7 +876,6 @@
         }
 
         function toggleSet(setIdx) {
-            vibrate([100]); // Vibrate on set completion
             const workout = workoutPlan[currentDay];
             const exercise = workout.exercises[currentExercise];
             
@@ -885,13 +890,13 @@
                 };
             }
             
-            progress[currentDay].exercises[currentExercise].sets[setIdx].checked = 
-                !progress[currentDay].exercises[currentExercise].sets[setIdx].checked;
+            const currentChecked = progress[currentDay].exercises[currentExercise].sets[setIdx].checked;
+            progress[currentDay].exercises[currentExercise].sets[setIdx].checked = !currentChecked;
             
             localStorage.setItem('progress', JSON.stringify(progress));
             
             // Start rest timer after checking
-            if (progress[currentDay].exercises[currentExercise].sets[setIdx].checked) {
+            if (!currentChecked) {
                 startRestTimer();
             }
             
@@ -899,7 +904,6 @@
         }
 
         function toggleHand(setIdx, hand) {
-            vibrate([100]); // Vibrate on hand completion
             const workout = workoutPlan[currentDay];
             const exercise = workout.exercises[currentExercise];
             
@@ -916,18 +920,17 @@
             }
             
             if (hand === 'left') {
-                progress[currentDay].exercises[currentExercise].sets[setIdx].leftHand = 
-                    !progress[currentDay].exercises[currentExercise].sets[setIdx].leftHand;
+                const currentLeft = progress[currentDay].exercises[currentExercise].sets[setIdx].leftHand;
+                progress[currentDay].exercises[currentExercise].sets[setIdx].leftHand = !currentLeft;
             } else {
-                progress[currentDay].exercises[currentExercise].sets[setIdx].rightHand = 
-                    !progress[currentDay].exercises[currentExercise].sets[setIdx].rightHand;
+                const currentRight = progress[currentDay].exercises[currentExercise].sets[setIdx].rightHand;
+                progress[currentDay].exercises[currentExercise].sets[setIdx].rightHand = !currentRight;
             }
             
             // Check if both hands are done
             const setData = progress[currentDay].exercises[currentExercise].sets[setIdx];
-            if (setData.leftHand && setData.rightHand) {
+            if (setData.leftHand && setData.rightHand && !setData.checked) {
                 setData.checked = true;
-                vibrate([100, 50, 100]); // Double vibrate for set complete
                 startRestTimer();
             }
             
@@ -936,7 +939,6 @@
         }
 
         function startRestTimer() {
-            vibrate([200]); // Vibrate on rest start
             restTimeLeft = 60;
             document.getElementById('restTimerCount').textContent = restTimeLeft;
             document.getElementById('restTimer').classList.add('active');
@@ -946,17 +948,15 @@
                 document.getElementById('restTimerCount').textContent = restTimeLeft;
                 
                 if (restTimeLeft <= 0) {
-                    vibrate([100, 50, 100, 50, 100]); // Multiple vibrations when rest ends
                     skipRest();
                 }
             }, 1000);
         }
 
         function skipRest() {
-            if (!confirm(`Skip rest timer?\n\n${restTimeLeft} seconds remaining.`)) {
+            if (restTimeLeft > 0 && !confirm(`Skip rest timer?\n\n${restTimeLeft} seconds remaining.`)) {
                 return;
             }
-            vibrate([150]);
             clearInterval(restTimer);
             document.getElementById('restTimer').classList.remove('active');
         }
@@ -978,14 +978,12 @@
                 if (!confirm(`Move to next exercise?\n\n${workout.exercises[currentExercise + 1].name}`)) {
                     return;
                 }
-                vibrate([150]);
                 currentExercise++;
                 showExercise();
             } else {
                 if (!confirm('Finish this workout?\n\nYou have completed all exercises!')) {
                     return;
                 }
-                vibrate([200, 100, 200, 100, 200]); // Celebration vibration
                 completeWorkout();
             }
         }
