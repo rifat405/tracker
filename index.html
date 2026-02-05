@@ -282,6 +282,33 @@
             font-weight: bold;
         }
 
+        .tutorial-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff0000;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tutorial-btn:hover {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff3333;
+        }
+
+        .tutorial-btn::before {
+            content: '▶️';
+            font-size: 16px;
+        }
+
         .rest-timer {
             position: fixed;
             top: 50%;
@@ -497,6 +524,10 @@
 
             <div class="exercise-icon">💪</div>
 
+            <button class="tutorial-btn" id="tutorialBtn" onclick="openTutorial()">
+                Watch Tutorial on YouTube
+            </button>
+
             <div class="sets-container" id="setsContainer"></div>
 
             <button class="next-btn" id="nextBtn" onclick="nextExercise()">NEXT EXERCISE ➡️</button>
@@ -532,144 +563,144 @@
     <script>
         const workoutPlan = {
             1: { name: "Upper Body Push", exercises: [
-                { name: "Push-ups", sets: 3, reps: 15, icon: "💪", needsHands: false },
-                { name: "Dumbbell Shoulder Press", sets: 3, reps: 12, icon: "🏋️", needsHands: true },
-                { name: "Dumbbell Chest Fly", sets: 3, reps: 12, icon: "🦅", needsHands: true },
-                { name: "Tricep Dips", sets: 3, reps: 12, icon: "💪", needsHands: false }
+                { name: "Push-ups", sets: 3, reps: 15, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/IODxDxX7oi4" },
+                { name: "Dumbbell Shoulder Press", sets: 3, reps: 12, icon: "🏋️", needsHands: true, tutorial: "https://youtube.com/shorts/qEwKCR5JCog" },
+                { name: "Dumbbell Chest Fly", sets: 3, reps: 12, icon: "🦅", needsHands: true, tutorial: "https://youtube.com/shorts/Z71vBdwY20I" },
+                { name: "Tricep Dips", sets: 3, reps: 12, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/0326dy_-CzM" }
             ]},
             2: { name: "Legs & Core", exercises: [
-                { name: "Dumbbell Squats", sets: 4, reps: 15, icon: "🦵", needsHands: false },
-                { name: "Lunges", sets: 3, reps: 12, icon: "🚶", needsHands: true },
-                { name: "Calf Raises", sets: 3, reps: 20, icon: "👟", needsHands: true },
-                { name: "Plank Hold", sets: 3, reps: 45, icon: "🧘", needsHands: false }
+                { name: "Dumbbell Squats", sets: 4, reps: 15, icon: "🦵", needsHands: false, tutorial: "https://youtube.com/shorts/aclHkVaku9U" },
+                { name: "Lunges", sets: 3, reps: 12, icon: "🚶", needsHands: true, tutorial: "https://youtube.com/shorts/QOVaHwm-Q6U" },
+                { name: "Calf Raises", sets: 3, reps: 20, icon: "👟", needsHands: true, tutorial: "https://youtube.com/shorts/gwLzBJYoWlI" },
+                { name: "Plank Hold", sets: 3, reps: 45, icon: "🧘", needsHands: false, tutorial: "https://youtube.com/shorts/pvIjsG5Svck" }
             ]},
             3: { name: "Back & Biceps", exercises: [
-                { name: "Dumbbell Rows", sets: 4, reps: 12, icon: "🚣", needsHands: true },
-                { name: "Bicep Curls", sets: 3, reps: 15, icon: "💪", needsHands: true },
-                { name: "Hammer Curls", sets: 3, reps: 12, icon: "🔨", needsHands: true },
-                { name: "Superman Holds", sets: 3, reps: 30, icon: "🦸", needsHands: false }
+                { name: "Dumbbell Rows", sets: 4, reps: 12, icon: "🚣", needsHands: true, tutorial: "https://youtube.com/shorts/roCP6wCXPqo" },
+                { name: "Bicep Curls", sets: 3, reps: 15, icon: "💪", needsHands: true, tutorial: "https://youtube.com/shorts/sAq_ocpRh_I" },
+                { name: "Hammer Curls", sets: 3, reps: 12, icon: "🔨", needsHands: true, tutorial: "https://youtube.com/shorts/TwD-YGVP4Bk" },
+                { name: "Superman Holds", sets: 3, reps: 30, icon: "🦸", needsHands: false, tutorial: "https://youtube.com/shorts/z6PJMT2y8GQ" }
             ]},
             4: { name: "Rest Day", rest: true },
             5: { name: "Full Body Circuit", exercises: [
-                { name: "Burpees", sets: 3, reps: 10, icon: "🔥", needsHands: false },
-                { name: "Dumbbell Thrusters", sets: 3, reps: 12, icon: "⚡", needsHands: false },
-                { name: "Mountain Climbers", sets: 3, reps: 20, icon: "⛰️", needsHands: false },
-                { name: "Russian Twists", sets: 3, reps: 30, icon: "🌀", needsHands: false }
+                { name: "Burpees", sets: 3, reps: 10, icon: "🔥", needsHands: false, tutorial: "https://youtube.com/shorts/JZQA08SlJnM" },
+                { name: "Dumbbell Thrusters", sets: 3, reps: 12, icon: "⚡", needsHands: false, tutorial: "https://youtube.com/shorts/3EyccJB9ZgQ" },
+                { name: "Mountain Climbers", sets: 3, reps: 20, icon: "⛰️", needsHands: false, tutorial: "https://youtube.com/shorts/nmwgirgXLYM" },
+                { name: "Russian Twists", sets: 3, reps: 30, icon: "🌀", needsHands: false, tutorial: "https://youtube.com/shorts/wkD8rjkodUI" }
             ]},
             6: { name: "Shoulders & Arms", exercises: [
-                { name: "Lateral Raises", sets: 3, reps: 15, icon: "🦅", needsHands: true },
-                { name: "Front Raises", sets: 3, reps: 12, icon: "🏋️", needsHands: true },
-                { name: "Tricep Extension", sets: 3, reps: 12, icon: "💪", needsHands: false },
-                { name: "Concentration Curls", sets: 3, reps: 12, icon: "💪", needsHands: true }
+                { name: "Lateral Raises", sets: 3, reps: 15, icon: "🦅", needsHands: true, tutorial: "https://youtube.com/shorts/3VcKaXpzqRo" },
+                { name: "Front Raises", sets: 3, reps: 12, icon: "🏋️", needsHands: true, tutorial: "https://youtube.com/shorts/ZF_xu9txiLk" },
+                { name: "Tricep Extension", sets: 3, reps: 12, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/nRiJVZDpdL0" },
+                { name: "Concentration Curls", sets: 3, reps: 12, icon: "💪", needsHands: true, tutorial: "https://youtube.com/shorts/Jvj-6K5kq5I" }
             ]},
             7: { name: "Rest Day", rest: true },
             8: { name: "Chest & Triceps", exercises: [
-                { name: "Wide Push-ups", sets: 4, reps: 15, icon: "💪", needsHands: false },
-                { name: "Floor Press", sets: 3, reps: 12, icon: "🏋️", needsHands: true },
-                { name: "Diamond Push-ups", sets: 3, reps: 10, icon: "💎", needsHands: false },
-                { name: "Tricep Kickbacks", sets: 3, reps: 15, icon: "🔙", needsHands: true }
+                { name: "Wide Push-ups", sets: 4, reps: 15, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/5L4kdK-vJfo" },
+                { name: "Floor Press", sets: 3, reps: 12, icon: "🏋️", needsHands: true, tutorial: "https://youtube.com/shorts/uUGDRwge4F8" },
+                { name: "Diamond Push-ups", sets: 3, reps: 10, icon: "💎", needsHands: false, tutorial: "https://youtube.com/shorts/J0DnG1_S92I" },
+                { name: "Tricep Kickbacks", sets: 3, reps: 15, icon: "🔙", needsHands: true, tutorial: "https://youtube.com/shorts/6SS6K3lAwZ8" }
             ]},
             9: { name: "Legs & Glutes", exercises: [
-                { name: "Goblet Squats", sets: 4, reps: 15, icon: "🏆", needsHands: false },
-                { name: "Romanian Deadlifts", sets: 3, reps: 12, icon: "🏋️", needsHands: false },
-                { name: "Split Squats", sets: 3, reps: 10, icon: "🦵", needsHands: true },
-                { name: "Step-ups", sets: 3, reps: 12, icon: "🪜", needsHands: true }
+                { name: "Goblet Squats", sets: 4, reps: 15, icon: "🏆", needsHands: false, tutorial: "https://youtube.com/shorts/qaQPfi8f5kQ" },
+                { name: "Romanian Deadlifts", sets: 3, reps: 12, icon: "🏋️", needsHands: false, tutorial: "https://youtube.com/shorts/2SHsk9AzdjA" },
+                { name: "Split Squats", sets: 3, reps: 10, icon: "🦵", needsHands: true, tutorial: "https://youtube.com/shorts/2C-uNgKwPLE" },
+                { name: "Step-ups", sets: 3, reps: 12, icon: "🪜", needsHands: true, tutorial: "https://youtube.com/shorts/5fgjRQ9SjuE" }
             ]},
             10: { name: "Back & Biceps", exercises: [
-                { name: "Single Arm Rows", sets: 3, reps: 12, icon: "🚣", needsHands: true },
-                { name: "Pullovers", sets: 3, reps: 12, icon: "🏋️", needsHands: false },
-                { name: "Bicep 21s", sets: 2, reps: 21, icon: "💪", needsHands: true },
-                { name: "Reverse Flys", sets: 3, reps: 15, icon: "🦅", needsHands: true }
+                { name: "Single Arm Rows", sets: 3, reps: 12, icon: "🚣", needsHands: true, tutorial: "https://youtube.com/shorts/roCP6wCXPqo" },
+                { name: "Pullovers", sets: 3, reps: 12, icon: "🏋️", needsHands: false, tutorial: "https://youtube.com/shorts/FK0MZmdLPu4" },
+                { name: "Bicep 21s", sets: 2, reps: 21, icon: "💪", needsHands: true, tutorial: "https://youtube.com/shorts/ZJC-k-RZXPk" },
+                { name: "Reverse Flys", sets: 3, reps: 15, icon: "🦅", needsHands: true, tutorial: "https://youtube.com/shorts/ttvfGg9d76c" }
             ]},
             11: { name: "Rest Day", rest: true },
             12: { name: "HIIT Power", exercises: [
-                { name: "Dumbbell Swings", sets: 3, reps: 20, icon: "🔥", needsHands: false },
-                { name: "Jump Squats", sets: 3, reps: 15, icon: "⚡", needsHands: false },
-                { name: "Clean & Press", sets: 3, reps: 10, icon: "🏋️", needsHands: false },
-                { name: "High Knees", sets: 3, reps: 30, icon: "🏃", needsHands: false }
+                { name: "Dumbbell Swings", sets: 3, reps: 20, icon: "🔥", needsHands: false, tutorial: "https://youtube.com/shorts/YyvCrgrQdiE" },
+                { name: "Jump Squats", sets: 3, reps: 15, icon: "⚡", needsHands: false, tutorial: "https://youtube.com/shorts/CVaEhXotL7M" },
+                { name: "Clean & Press", sets: 3, reps: 10, icon: "🏋️", needsHands: false, tutorial: "https://youtube.com/shorts/kMx-ceWSq3I" },
+                { name: "High Knees", sets: 3, reps: 30, icon: "🏃", needsHands: false, tutorial: "https://youtube.com/shorts/8opcQdC-V-U" }
             ]},
             13: { name: "Core Destroyer", exercises: [
-                { name: "Side Bends", sets: 3, reps: 20, icon: "🌊", needsHands: true },
-                { name: "Bicycle Crunches", sets: 3, reps: 30, icon: "🚴", needsHands: false },
-                { name: "Woodchoppers", sets: 3, reps: 15, icon: "🪓", needsHands: true },
-                { name: "Leg Raises", sets: 3, reps: 15, icon: "🦵", needsHands: false }
+                { name: "Side Bends", sets: 3, reps: 20, icon: "🌊", needsHands: true, tutorial: "https://youtube.com/shorts/sXPhUFRDU1s" },
+                { name: "Bicycle Crunches", sets: 3, reps: 30, icon: "🚴", needsHands: false, tutorial: "https://youtube.com/shorts/1we3bh9uhqY" },
+                { name: "Woodchoppers", sets: 3, reps: 15, icon: "🪓", needsHands: true, tutorial: "https://youtube.com/shorts/pAplQXk3dkU" },
+                { name: "Leg Raises", sets: 3, reps: 15, icon: "🦵", needsHands: false, tutorial: "https://youtube.com/shorts/JB2oyawG9KI" }
             ]},
             14: { name: "Rest Day", rest: true },
             15: { name: "Power Upper", exercises: [
-                { name: "Explosive Push-ups", sets: 4, reps: 12, icon: "💥", needsHands: false },
-                { name: "Arnold Press", sets: 3, reps: 10, icon: "🏋️", needsHands: true },
-                { name: "Renegade Rows", sets: 3, reps: 10, icon: "🚣", needsHands: true },
-                { name: "Close Push-ups", sets: 3, reps: 15, icon: "💪", needsHands: false }
+                { name: "Explosive Push-ups", sets: 4, reps: 12, icon: "💥", needsHands: false, tutorial: "https://youtube.com/shorts/ykvzYBTabKc" },
+                { name: "Arnold Press", sets: 3, reps: 10, icon: "🏋️", needsHands: true, tutorial: "https://youtube.com/shorts/6Z15_WdXmVw" },
+                { name: "Renegade Rows", sets: 3, reps: 10, icon: "🚣", needsHands: true, tutorial: "https://youtube.com/shorts/wjL7yP6b_v4" },
+                { name: "Close Push-ups", sets: 3, reps: 15, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/J0DnG1_S92I" }
             ]},
             16: { name: "Lower Power", exercises: [
-                { name: "Jump Squats", sets: 4, reps: 12, icon: "⚡", needsHands: false },
-                { name: "Single Leg Deadlifts", sets: 3, reps: 10, icon: "🦵", needsHands: true },
-                { name: "Sumo Squats", sets: 3, reps: 15, icon: "🏋️", needsHands: false },
-                { name: "Wall Sit", sets: 3, reps: 60, icon: "🧱", needsHands: false }
+                { name: "Jump Squats", sets: 4, reps: 12, icon: "⚡", needsHands: false, tutorial: "https://youtube.com/shorts/CVaEhXotL7M" },
+                { name: "Single Leg Deadlifts", sets: 3, reps: 10, icon: "🦵", needsHands: true, tutorial: "https://youtube.com/shorts/vNFQht369w4" },
+                { name: "Sumo Squats", sets: 3, reps: 15, icon: "🏋️", needsHands: false, tutorial: "https://youtube.com/shorts/2gPbPa2zYCc" },
+                { name: "Wall Sit", sets: 3, reps: 60, icon: "🧱", needsHands: false, tutorial: "https://youtube.com/shorts/y-wV4Venusw" }
             ]},
             17: { name: "Athletic Build", exercises: [
-                { name: "Man Makers", sets: 3, reps: 8, icon: "🔥", needsHands: false },
-                { name: "Farmers Walk", sets: 3, reps: 60, icon: "🚶", needsHands: false },
-                { name: "Deadlifts", sets: 4, reps: 12, icon: "🏋️", needsHands: false },
-                { name: "Push-up to T", sets: 3, reps: 10, icon: "💪", needsHands: false }
+                { name: "Man Makers", sets: 3, reps: 8, icon: "🔥", needsHands: false, tutorial: "https://youtube.com/shorts/8gvI0GHLjO0" },
+                { name: "Farmers Walk", sets: 3, reps: 60, icon: "🚶", needsHands: false, tutorial: "https://youtube.com/shorts/rt17lmnaLSM" },
+                { name: "Deadlifts", sets: 4, reps: 12, icon: "🏋️", needsHands: false, tutorial: "https://youtube.com/shorts/op9kVnSso6Q" },
+                { name: "Push-up to T", sets: 3, reps: 10, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/Ej5dnyiPCF4" }
             ]},
             18: { name: "Rest Day", rest: true },
             19: { name: "Strength Focus", exercises: [
-                { name: "Slow Push-ups", sets: 3, reps: 10, icon: "🐌", needsHands: false },
-                { name: "Pause Squats", sets: 4, reps: 10, icon: "⏸️", needsHands: false },
-                { name: "Isometric Holds", sets: 3, reps: 30, icon: "🧘", needsHands: false },
-                { name: "Shrugs", sets: 3, reps: 20, icon: "🤷", needsHands: false }
+                { name: "Slow Push-ups", sets: 3, reps: 10, icon: "🐌", needsHands: false, tutorial: "https://youtube.com/shorts/IODxDxX7oi4" },
+                { name: "Pause Squats", sets: 4, reps: 10, icon: "⏸️", needsHands: false, tutorial: "https://youtube.com/shorts/gsNoPYwWXeA" },
+                { name: "Isometric Holds", sets: 3, reps: 30, icon: "🧘", needsHands: false, tutorial: "https://youtube.com/shorts/pvIjsG5Svck" },
+                { name: "Shrugs", sets: 3, reps: 20, icon: "🤷", needsHands: false, tutorial: "https://youtube.com/shorts/cJRVVxGytpo" }
             ]},
             20: { name: "Hypertrophy Push", exercises: [
-                { name: "Incline Press", sets: 3, reps: 15, icon: "🏋️", needsHands: true },
-                { name: "Chest Flys", sets: 3, reps: 12, icon: "🦅", needsHands: true },
-                { name: "Tricep Extension", sets: 3, reps: 15, icon: "💪", needsHands: false },
-                { name: "Pike Push-ups", sets: 3, reps: 12, icon: "🔺", needsHands: false }
+                { name: "Incline Press", sets: 3, reps: 15, icon: "🏋️", needsHands: true, tutorial: "https://youtube.com/shorts/8iPEduYM6Xg" },
+                { name: "Chest Flys", sets: 3, reps: 12, icon: "🦅", needsHands: true, tutorial: "https://youtube.com/shorts/Z71vBdwY20I" },
+                { name: "Tricep Extension", sets: 3, reps: 15, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/nRiJVZDpdL0" },
+                { name: "Pike Push-ups", sets: 3, reps: 12, icon: "🔺", needsHands: false, tutorial: "https://youtube.com/shorts/spoGj_2L90w" }
             ]},
             21: { name: "Rest Day", rest: true },
             22: { name: "Back Thickness", exercises: [
-                { name: "Wide Rows", sets: 4, reps: 12, icon: "🚣", needsHands: true },
-                { name: "Reverse Flys", sets: 3, reps: 15, icon: "🦅", needsHands: true },
-                { name: "Shrugs", sets: 3, reps: 20, icon: "🤷", needsHands: false },
-                { name: "Deadlifts", sets: 3, reps: 12, icon: "🏋️", needsHands: false }
+                { name: "Wide Rows", sets: 4, reps: 12, icon: "🚣", needsHands: true, tutorial: "https://youtube.com/shorts/roCP6wCXPqo" },
+                { name: "Reverse Flys", sets: 3, reps: 15, icon: "🦅", needsHands: true, tutorial: "https://youtube.com/shorts/ttvfGg9d76c" },
+                { name: "Shrugs", sets: 3, reps: 20, icon: "🤷", needsHands: false, tutorial: "https://youtube.com/shorts/cJRVVxGytpo" },
+                { name: "Deadlifts", sets: 3, reps: 12, icon: "🏋️", needsHands: false, tutorial: "https://youtube.com/shorts/op9kVnSso6Q" }
             ]},
             23: { name: "Leg Definition", exercises: [
-                { name: "Sissy Squats", sets: 3, reps: 12, icon: "🦵", needsHands: false },
-                { name: "Walking Lunges", sets: 3, reps: 15, icon: "🚶", needsHands: true },
-                { name: "Single Calf Raises", sets: 3, reps: 20, icon: "👟", needsHands: true },
-                { name: "Hip Thrusts", sets: 3, reps: 15, icon: "🍑", needsHands: false }
+                { name: "Sissy Squats", sets: 3, reps: 12, icon: "🦵", needsHands: false, tutorial: "https://youtube.com/shorts/FgICH_hQLQg" },
+                { name: "Walking Lunges", sets: 3, reps: 15, icon: "🚶", needsHands: true, tutorial: "https://youtube.com/shorts/YlLE7OAJHOM" },
+                { name: "Single Calf Raises", sets: 3, reps: 20, icon: "👟", needsHands: true, tutorial: "https://youtube.com/shorts/gwLzBJYoWlI" },
+                { name: "Hip Thrusts", sets: 3, reps: 15, icon: "🍑", needsHands: false, tutorial: "https://youtube.com/shorts/0KQ-YVrIYdQ" }
             ]},
             24: { name: "Arm Pump", exercises: [
-                { name: "Slow Bicep Curls", sets: 4, reps: 15, icon: "💪", needsHands: true },
-                { name: "Skull Crushers", sets: 3, reps: 12, icon: "💀", needsHands: false },
-                { name: "Hammer Curls", sets: 3, reps: 15, icon: "🔨", needsHands: true },
-                { name: "Diamond Push-ups", sets: 3, reps: 12, icon: "💎", needsHands: false }
+                { name: "Slow Bicep Curls", sets: 4, reps: 15, icon: "💪", needsHands: true, tutorial: "https://youtube.com/shorts/sAq_ocpRh_I" },
+                { name: "Skull Crushers", sets: 3, reps: 12, icon: "💀", needsHands: false, tutorial: "https://youtube.com/shorts/d_KZxkY_0cM" },
+                { name: "Hammer Curls", sets: 3, reps: 15, icon: "🔨", needsHands: true, tutorial: "https://youtube.com/shorts/TwD-YGVP4Bk" },
+                { name: "Diamond Push-ups", sets: 3, reps: 12, icon: "💎", needsHands: false, tutorial: "https://youtube.com/shorts/J0DnG1_S92I" }
             ]},
             25: { name: "Rest Day", rest: true },
             26: { name: "Total Body Burn", exercises: [
-                { name: "Thrusters", sets: 4, reps: 15, icon: "🚀", needsHands: false },
-                { name: "Burpees", sets: 3, reps: 10, icon: "🔥", needsHands: false },
-                { name: "Mountain Climbers", sets: 3, reps: 20, icon: "⛰️", needsHands: false },
-                { name: "Plank Rows", sets: 3, reps: 12, icon: "🚣", needsHands: true }
+                { name: "Thrusters", sets: 4, reps: 15, icon: "🚀", needsHands: false, tutorial: "https://youtube.com/shorts/3EyccJB9ZgQ" },
+                { name: "Burpees", sets: 3, reps: 10, icon: "🔥", needsHands: false, tutorial: "https://youtube.com/shorts/JZQA08SlJnM" },
+                { name: "Mountain Climbers", sets: 3, reps: 20, icon: "⛰️", needsHands: false, tutorial: "https://youtube.com/shorts/nmwgirgXLYM" },
+                { name: "Plank Rows", sets: 3, reps: 12, icon: "🚣", needsHands: true, tutorial: "https://youtube.com/shorts/wjL7yP6b_v4" }
             ]},
             27: { name: "Warrior Shoulders", exercises: [
-                { name: "Military Press", sets: 4, reps: 12, icon: "⚔️", needsHands: true },
-                { name: "Upright Rows", sets: 3, reps: 12, icon: "🏋️", needsHands: false },
-                { name: "Lateral Raises", sets: 3, reps: 15, icon: "🦅", needsHands: true },
-                { name: "Face Pulls", sets: 3, reps: 15, icon: "😤", needsHands: false }
+                { name: "Military Press", sets: 4, reps: 12, icon: "⚔️", needsHands: true, tutorial: "https://youtube.com/shorts/qEwKCR5JCog" },
+                { name: "Upright Rows", sets: 3, reps: 12, icon: "🏋️", needsHands: false, tutorial: "https://youtube.com/shorts/TqMzcQchJFo" },
+                { name: "Lateral Raises", sets: 3, reps: 15, icon: "🦅", needsHands: true, tutorial: "https://youtube.com/shorts/3VcKaXpzqRo" },
+                { name: "Face Pulls", sets: 3, reps: 15, icon: "😤", needsHands: false, tutorial: "https://youtube.com/shorts/V8dZ3pyiCBo" }
             ]},
             28: { name: "Rest Day", rest: true },
             29: { name: "Spartan Challenge", exercises: [
-                { name: "Push-ups", sets: 1, reps: 50, icon: "💪", needsHands: false },
-                { name: "Squats", sets: 1, reps: 50, icon: "🦵", needsHands: false },
-                { name: "Burpees", sets: 1, reps: 25, icon: "🔥", needsHands: false },
-                { name: "Dumbbell Swings", sets: 1, reps: 75, icon: "⚔️", needsHands: false }
+                { name: "Push-ups", sets: 1, reps: 50, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/IODxDxX7oi4" },
+                { name: "Squats", sets: 1, reps: 50, icon: "🦵", needsHands: false, tutorial: "https://youtube.com/shorts/aclHkVaku9U" },
+                { name: "Burpees", sets: 1, reps: 25, icon: "🔥", needsHands: false, tutorial: "https://youtube.com/shorts/JZQA08SlJnM" },
+                { name: "Dumbbell Swings", sets: 1, reps: 75, icon: "⚔️", needsHands: false, tutorial: "https://youtube.com/shorts/YyvCrgrQdiE" }
             ]},
             30: { name: "Victory Lap", exercises: [
-                { name: "Push Variations", sets: 4, reps: 20, icon: "💪", needsHands: false },
-                { name: "Squat Variations", sets: 4, reps: 20, icon: "🦵", needsHands: false },
-                { name: "Core Crusher", sets: 4, reps: 30, icon: "🔥", needsHands: false },
-                { name: "Victory Flex", sets: 1, reps: 1, icon: "🏆", needsHands: false }
+                { name: "Push Variations", sets: 4, reps: 20, icon: "💪", needsHands: false, tutorial: "https://youtube.com/shorts/IODxDxX7oi4" },
+                { name: "Squat Variations", sets: 4, reps: 20, icon: "🦵", needsHands: false, tutorial: "https://youtube.com/shorts/aclHkVaku9U" },
+                { name: "Core Crusher", sets: 4, reps: 30, icon: "🔥", needsHands: false, tutorial: "https://youtube.com/shorts/pvIjsG5Svck" },
+                { name: "Victory Flex", sets: 1, reps: 1, icon: "🏆", needsHands: false, tutorial: "https://youtube.com/shorts/dQw4w9WgXcQ" }
             ]}
         };
 
@@ -678,6 +709,13 @@
         let progress = JSON.parse(localStorage.getItem('progress')) || {};
         let restTimer = null;
         let restTimeLeft = 60;
+
+        // Vibration function
+        function vibrate(pattern = [100]) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+            }
+        }
 
         // Auto-advance day based on date
         function checkDayProgression() {
@@ -693,6 +731,14 @@
                 currentDay = Math.min(diffDays, 30);
             }
             localStorage.setItem('currentDay', currentDay);
+        }
+
+        function openTutorial() {
+            vibrate([50, 50, 50]);
+            const exercise = workoutPlan[currentDay].exercises[currentExercise];
+            if (exercise.tutorial) {
+                window.open(exercise.tutorial, '_blank');
+            }
         }
 
         function initApp() {
@@ -718,6 +764,7 @@
         }
 
         function startWorkout() {
+            vibrate([150]);
             const workout = workoutPlan[currentDay];
             
             if (workout.rest) {
@@ -800,6 +847,16 @@
         }
 
         function updateReps(setIdx, reps) {
+            const exercise = workoutPlan[currentDay].exercises[currentExercise];
+            const oldReps = progress[currentDay]?.exercises?.[currentExercise]?.sets?.[setIdx]?.reps || exercise.reps;
+            
+            if (oldReps != reps) {
+                if (!confirm(`Change reps from ${oldReps} to ${reps}?\n\nThis will update your workout.`)) {
+                    showExercise(); // Reset to original value
+                    return;
+                }
+            }
+            
             if (!progress[currentDay]) progress[currentDay] = { exercises: [] };
             if (!progress[currentDay].exercises[currentExercise]) {
                 progress[currentDay].exercises[currentExercise] = { sets: [] };
@@ -813,6 +870,7 @@
         }
 
         function toggleSet(setIdx) {
+            vibrate([100]); // Vibrate on set completion
             const workout = workoutPlan[currentDay];
             const exercise = workout.exercises[currentExercise];
             
@@ -841,6 +899,7 @@
         }
 
         function toggleHand(setIdx, hand) {
+            vibrate([100]); // Vibrate on hand completion
             const workout = workoutPlan[currentDay];
             const exercise = workout.exercises[currentExercise];
             
@@ -868,6 +927,7 @@
             const setData = progress[currentDay].exercises[currentExercise].sets[setIdx];
             if (setData.leftHand && setData.rightHand) {
                 setData.checked = true;
+                vibrate([100, 50, 100]); // Double vibrate for set complete
                 startRestTimer();
             }
             
@@ -876,6 +936,7 @@
         }
 
         function startRestTimer() {
+            vibrate([200]); // Vibrate on rest start
             restTimeLeft = 60;
             document.getElementById('restTimerCount').textContent = restTimeLeft;
             document.getElementById('restTimer').classList.add('active');
@@ -885,12 +946,17 @@
                 document.getElementById('restTimerCount').textContent = restTimeLeft;
                 
                 if (restTimeLeft <= 0) {
+                    vibrate([100, 50, 100, 50, 100]); // Multiple vibrations when rest ends
                     skipRest();
                 }
             }, 1000);
         }
 
         function skipRest() {
+            if (!confirm(`Skip rest timer?\n\n${restTimeLeft} seconds remaining.`)) {
+                return;
+            }
+            vibrate([150]);
             clearInterval(restTimer);
             document.getElementById('restTimer').classList.remove('active');
         }
@@ -909,9 +975,17 @@
             const workout = workoutPlan[currentDay];
             
             if (currentExercise < workout.exercises.length - 1) {
+                if (!confirm(`Move to next exercise?\n\n${workout.exercises[currentExercise + 1].name}`)) {
+                    return;
+                }
+                vibrate([150]);
                 currentExercise++;
                 showExercise();
             } else {
+                if (!confirm('Finish this workout?\n\nYou have completed all exercises!')) {
+                    return;
+                }
+                vibrate([200, 100, 200, 100, 200]); // Celebration vibration
                 completeWorkout();
             }
         }
