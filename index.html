@@ -98,7 +98,6 @@
         <div class="rest-timer" id="restTimer">
             <div class="rest-timer-title">Rest Time</div>
             <div class="rest-timer-count" id="restTimerCount">60</div>
-            <button class="rest-timer-skip" onclick="skipRest()">Skip Rest</button>
         </div>
 
         <div class="screen active" id="homeScreen">
@@ -139,7 +138,6 @@
                 </div>
             </div>
             <div class="sets-container" id="setsContainer"></div>
-            <button class="next-btn" id="nextBtn" onclick="nextExercise()">NEXT EXERCISE ➡️</button>
             <div class="progress-bar">
                 <div class="progress-fill" id="exerciseProgress" style="width: 0%"></div>
             </div>
@@ -171,7 +169,7 @@
 
         let currentDay=1,currentExercise=0,progress=JSON.parse(localStorage.getItem('progress'))||{},restTimer=null,restTimeLeft=60,currentTapCount=0,currentSet=0;
         
-        function checkDayProgression(){const startDate=localStorage.getItem('startDate');if(!startDate){localStorage.setItem('startDate',new Date().toDateString());currentDay=1}else{const start=new Date(startDate),today=new Date(),diffDays=Math.ceil(Math.abs(today-start)/(1e3*60*60*24));currentDay=diffDays>30?((diffDays-1)%30)+1:diffDays}localStorage.setItem('currentDay',currentDay)}
+        function checkDayProgression(){const lastDate=localStorage.getItem('lastWorkoutDate'),today=new Date().toDateString();if(lastDate!==today){const completedDays=parseInt(localStorage.getItem('completedDaysCount'))||0;if(completedDays>=30){localStorage.setItem('completedDaysCount','0');currentDay=1}else{currentDay=completedDays+1}}else{currentDay=parseInt(localStorage.getItem('currentDay'))||1}localStorage.setItem('currentDay',currentDay)}
         
         function openTutorial(){const exercise=workoutData[currentDay].exercises[currentExercise];if(exercise.tutorial)window.open(exercise.tutorial,'_blank')}
         
@@ -181,21 +179,21 @@
         
         function startWorkout(){const workout=workoutData[currentDay];if(workout.rest){showScreen('restScreen')}else{currentExercise=0;showExercise();showScreen('exerciseScreen')}}
         
-        function showExercise(){const workout=workoutData[currentDay],exercise=workout.exercises[currentExercise];document.getElementById('exerciseCount').textContent=`Exercise ${currentExercise+1} of ${workout.exercises.length}`;document.getElementById('exerciseName').textContent=exercise.name;document.getElementById('exerciseIcon').textContent=exercise.icon;currentTapCount=0;currentSet=0;document.getElementById('tapButton').textContent='0';document.getElementById('tapProgressText').textContent=`Set 1 of ${exercise.sets} - Tap ${exercise.reps} times`;document.getElementById('tapProgressFill').style.width='0%';if(!progress[currentDay])progress[currentDay]={exercises:[]};if(!progress[currentDay].exercises[currentExercise]){progress[currentDay].exercises[currentExercise]={sets:Array(exercise.sets).fill(null).map(()=>({completed:false}))}}const container=document.getElementById('setsContainer'),exerciseProgress=progress[currentDay].exercises[currentExercise];container.innerHTML='';for(let i=0;i<exercise.sets;i++){const setData=exerciseProgress.sets[i]||{completed:false},setDiv=document.createElement('div');setDiv.className='set-info';if(setData.completed)setDiv.classList.add('completed');if(i===currentSet)setDiv.classList.add('current');setDiv.innerHTML=`<span class="set-number">Set ${i+1}</span><span class="set-status">${setData.completed?'✓ Complete':exercise.reps+' reps'}</span>`;container.appendChild(setDiv)}document.getElementById('tapButton').onclick=handleTap;const nextBtn=document.getElementById('nextBtn');if(currentExercise===workout.exercises.length-1){nextBtn.textContent='FINISH WORKOUT 🏆';nextBtn.className='next-btn finish-btn'}else{nextBtn.textContent='NEXT EXERCISE ➡️';nextBtn.className='next-btn'}updateExerciseProgress()}
+        function showExercise(){const workout=workoutData[currentDay],exercise=workout.exercises[currentExercise];document.getElementById('exerciseCount').textContent=`Exercise ${currentExercise+1} of ${workout.exercises.length}`;document.getElementById('exerciseName').textContent=exercise.name;document.getElementById('exerciseIcon').textContent=exercise.icon;currentTapCount=0;currentSet=0;document.getElementById('tapButton').textContent='0';document.getElementById('tapProgressText').textContent=`Set 1 of ${exercise.sets} - Tap ${exercise.reps} times`;document.getElementById('tapProgressFill').style.width='0%';if(!progress[currentDay])progress[currentDay]={exercises:[]};if(!progress[currentDay].exercises[currentExercise]){progress[currentDay].exercises[currentExercise]={sets:Array(exercise.sets).fill(null).map(()=>({completed:false}))}}document.getElementById('tapButton').onclick=handleTap;updateSetsDisplay()}
         
-        function handleTap(){const workout=workoutData[currentDay],exercise=workout.exercises[currentExercise];if(currentSet>=exercise.sets)return;currentTapCount++;document.getElementById('tapButton').textContent=currentTapCount;const progress_percent=(currentTapCount/exercise.reps)*100;document.getElementById('tapProgressFill').style.width=progress_percent+'%';if(currentTapCount>=exercise.reps){progress[currentDay].exercises[currentExercise].sets[currentSet].completed=true;localStorage.setItem('progress',JSON.stringify(progress));currentSet++;currentTapCount=0;if(currentSet<exercise.sets){startRestTimer();setTimeout(()=>{document.getElementById('tapButton').textContent='0';document.getElementById('tapProgressText').textContent=`Set ${currentSet+1} of ${exercise.sets} - Tap ${exercise.reps} times`;document.getElementById('tapProgressFill').style.width='0%';showExercise()},100)}else{document.getElementById('tapProgressText').textContent='All sets complete! 🎉';showExercise()}}}
+        function handleTap(){const workout=workoutData[currentDay],exercise=workout.exercises[currentExercise];if(currentSet>=exercise.sets)return;currentTapCount++;document.getElementById('tapButton').textContent=currentTapCount;const progress_percent=(currentTapCount/exercise.reps)*100;document.getElementById('tapProgressFill').style.width=progress_percent+'%';if(currentTapCount>=exercise.reps){progress[currentDay].exercises[currentExercise].sets[currentSet].completed=true;localStorage.setItem('progress',JSON.stringify(progress));currentSet++;currentTapCount=0;if(currentSet<exercise.sets){startRestTimer();setTimeout(()=>{document.getElementById('tapButton').textContent='0';document.getElementById('tapProgressText').textContent=`Set ${currentSet+1} of ${exercise.sets} - Tap ${exercise.reps} times`;document.getElementById('tapProgressFill').style.width='0%';updateSetsDisplay()},100)}else{setTimeout(()=>nextExercise(),500)}}}
         
-        function startRestTimer(){restTimeLeft=60;document.getElementById('restTimerCount').textContent=restTimeLeft;document.getElementById('restTimer').classList.add('active');restTimer=setInterval(()=>{restTimeLeft--;document.getElementById('restTimerCount').textContent=restTimeLeft;if(restTimeLeft<=0)skipRest()},1e3)}
+        function updateSetsDisplay(){const workout=workoutData[currentDay],exercise=workout.exercises[currentExercise],container=document.getElementById('setsContainer'),exerciseProgress=progress[currentDay].exercises[currentExercise];container.innerHTML='';for(let i=0;i<exercise.sets;i++){const setData=exerciseProgress.sets[i]||{completed:false},setDiv=document.createElement('div');setDiv.className='set-info';if(setData.completed)setDiv.classList.add('completed');if(i===currentSet)setDiv.classList.add('current');setDiv.innerHTML=`<span class="set-number">Set ${i+1}</span><span class="set-status">${setData.completed?'✓':exercise.reps+' reps'}</span>`;container.appendChild(setDiv)}updateExerciseProgress()}
         
-        function skipRest(){if(restTimeLeft>0&&!confirm(`Skip rest timer?\n\n${restTimeLeft} seconds remaining.`))return;clearInterval(restTimer);document.getElementById('restTimer').classList.remove('active')}
+        function startRestTimer(){restTimeLeft=60;document.getElementById('restTimerCount').textContent=restTimeLeft;document.getElementById('restTimer').classList.add('active');restTimer=setInterval(()=>{restTimeLeft--;document.getElementById('restTimerCount').textContent=restTimeLeft;if(restTimeLeft<=0){clearInterval(restTimer);document.getElementById('restTimer').classList.remove('active')}},1e3)}
         
         function updateExerciseProgress(){const workout=workoutData[currentDay],totalSets=workout.exercises.reduce((sum,ex)=>sum+ex.sets,0),completedSets=progress[currentDay]?.exercises?.reduce((sum,ex)=>sum+(ex.sets?.filter(s=>s.completed).length||0),0)||0;document.getElementById('exerciseProgress').style.width=Math.round((completedSets/totalSets)*100)+'%'}
         
-        function nextExercise(){const workout=workoutData[currentDay];if(currentExercise<workout.exercises.length-1){if(!confirm(`Move to next exercise?\n\n${workout.exercises[currentExercise+1].name}`))return;currentExercise++;showExercise()}else{if(!confirm('Finish this workout?\n\nYou have completed all exercises!'))return;completeWorkout()}}
+        function nextExercise(){const workout=workoutData[currentDay];if(currentExercise<workout.exercises.length-1){currentExercise++;showExercise()}else{completeWorkout()}}
         
-        function completeWorkout(){if(!progress[currentDay])progress[currentDay]={};progress[currentDay].completed=true;localStorage.setItem('progress',JSON.stringify(progress));showScreen('congratsScreen')}
+        function completeWorkout(){if(!progress[currentDay])progress[currentDay]={};progress[currentDay].completed=true;localStorage.setItem('progress',JSON.stringify(progress));const today=new Date().toDateString();localStorage.setItem('lastWorkoutDate',today);localStorage.setItem('completedDaysCount',currentDay);showScreen('congratsScreen')}
         
-        function completeRestDay(){if(!progress[currentDay])progress[currentDay]={};progress[currentDay].completed=true;localStorage.setItem('progress',JSON.stringify(progress));goHome()}
+        function completeRestDay(){if(!progress[currentDay])progress[currentDay]={};progress[currentDay].completed=true;localStorage.setItem('progress',JSON.stringify(progress));const today=new Date().toDateString();localStorage.setItem('lastWorkoutDate',today);localStorage.setItem('completedDaysCount',currentDay);goHome()}
         
         function goHome(){checkDayProgression();updateHomeScreen();showScreen('homeScreen')}
         
